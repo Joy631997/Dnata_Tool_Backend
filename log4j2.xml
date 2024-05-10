@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="60">
+    <Properties>
+        <Property name="path">D:/DnataReportingTool_Log</Property>
+        <Property name="backupPath">D:/DnataReportingTool_Backup_Log</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console-Appender" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} (%L) - %msg%n</pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingFile name="DnataReporting-Appender" append="true"
+                     fileName="${path}/DnataReporting_Log.log" 
+                     filePattern="${backupPath}/DnataReporting_Log-%d{MM-dd-yyyy-HH-mm}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} (%L) - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- Rollover every 200MB -->
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <!-- Custom CronTriggeringPolicy for backup every 30 days -->
+                <CronTriggeringPolicy schedule="0 0 0 1 * ?"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.teleapps.DnataReportingTool" level="info" additivity="false">
+            <AppenderRef ref="DnataReporting-Appender"/>
+            <AppenderRef ref="Console-Appender"/>
+        </Logger>
+        <Root>
+            <AppenderRef ref="Console-Appender"/>
+        </Root>
+    </Loggers>
+</Configuration>
